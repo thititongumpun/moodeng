@@ -19,7 +19,7 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
 
-  <Navbar />
+  <Navbar client:only="preact"/>
   <body>
     <slot />
   </body>
