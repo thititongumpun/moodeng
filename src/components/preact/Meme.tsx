@@ -51,7 +51,7 @@ export default function Meme({ search }: MemeProps) {
   if (isLoading && !isPlaceholderData) return <ImageLoader />;
 
   return (
-    <section className="p-1">
+    <section className="p-2">
       <div className="grid grid-cols-2 gap-8 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {data
           ?.filter((item) => !item.name.startsWith(".empty"))

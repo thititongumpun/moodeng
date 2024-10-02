@@ -6,7 +6,7 @@ type Props = {
 
 export default function Pagination({ page, setPage, hasMore }: Props) {
   return (
-    <div className="fixed bottom-0 left-0 w-full py-4 shadow-lg">
+    <div className="pb-14 md:p-0">
       <div className="flex justify-center">
         <div className="join grid max-w-xs grid-cols-3 gap-2 sm:max-w-sm lg:max-w-md">
           {/* Previous Button */}

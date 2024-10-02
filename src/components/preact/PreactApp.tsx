@@ -27,10 +27,10 @@ const App = () => {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="p-0">
+    <div className="py-8 md:p-1">
       <Suspense fallback={<Loading />}>
-      <Search search={search} setSearch={setSearch} />
-      <Meme search={search} />
+        <Search search={search} setSearch={setSearch} />
+        <Meme search={search} />
       </Suspense>
     </div>
   );
