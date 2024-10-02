@@ -67,7 +67,8 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
   </div>
 </div>
 
-<script>
+<!-- <script>
+ 
   document.addEventListener("DOMContentLoaded", () => {
     const hamburgerBtn = document.getElementById("hamburger-btn");
     const menu = document.getElementById("menu");
@@ -78,4 +79,29 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
       menu?.classList.toggle("hidden");
     });
   });
+</script> -->
+<script>
+  function initHamburgerMenu() {
+    const hamburgerBtn = document.getElementById("hamburger-btn");
+    const menu = document.getElementById("menu");
+
+    if (hamburgerBtn && menu) {
+      hamburgerBtn.addEventListener("click", () => {
+        const isExpanded =
+          hamburgerBtn.getAttribute("aria-expanded") === "true";
+        hamburgerBtn.setAttribute(
+          "aria-expanded",
+          isExpanded ? "false" : "true"
+        );
+        menu.classList.toggle("hidden");
+      });
+    }
+  }
+
+  // Fallback in case `DOMContentLoaded` doesn't work in production
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHamburgerMenu);
+  } else {
+    initHamburgerMenu(); // Run immediately if the DOM is already fully loaded
+  }
 </script>
