@@ -2,9 +2,11 @@
 import ThemeSwitcher from "./ThemeSwitcher.astro";
 ---
 
-<div class="navbar bg-base-500">
+<div class="navbar bg-base-500 z-1000">
+  <!-- Navbar Start -->
   <div class="navbar-start">
-    <div class="dropdown">
+    <div class="dropdown transition-all duration-300">
+      <!-- Hamburger Button for Mobile -->
       <button
         id="hamburger-btn"
         class="btn btn-ghost lg:hidden"
@@ -26,54 +28,44 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
         </svg>
       </button>
 
+      <!-- Mobile Dropdown Menu -->
       <ul
         id="menu"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow hidden"
       >
-        <li><a href="/">Item 1</a></li>
-        <li>
-          <a href="/">Parent</a>
-          <ul class="p-2">
-            <li><a href="/">Submenu 1</a></li>
-            <li><a href="/">Submenu 2</a></li>
-          </ul>
-        </li>
+        <li><a href="/memes">Memes</a></li>
+
         <li><a href="/xd">Item 3</a></li>
       </ul>
     </div>
 
+    <!-- Site Title -->
     <a class="btn btn-ghost text-xl" href="/">Wcydtt</a>
   </div>
 
+  <!-- Navbar Center for Larger Screens -->
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
       <li><a href="/memes">Memes</a></li>
-      <li>
-        <details>
-          <summary>Parent</summary>
-          <ul class="p-2">
-            <li><a href="/">Submenu 1</a></li>
-            <li><a href="/">Submenu 2</a></li>
-          </ul>
-        </details>
-      </li>
+
       <li><a href="/xd">Item 3</a></li>
     </ul>
   </div>
 
+  <!-- Navbar End -->
   <div class="navbar-end">
-    <a class="btn">Button</a>
     <ThemeSwitcher />
   </div>
 </div>
 
+<!-- JavaScript for Hamburger Menu -->
 <script>
   function initHamburgerMenu() {
     const hamburgerBtn = document.getElementById("hamburger-btn");
     const menu = document.getElementById("menu");
 
     if (hamburgerBtn && menu) {
-      hamburgerBtn.addEventListener("click", () => {
+      const toggleMenu = () => {
         const isExpanded =
           hamburgerBtn.getAttribute("aria-expanded") === "true";
         hamburgerBtn.setAttribute(
@@ -81,7 +73,9 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
           isExpanded ? "false" : "true"
         );
         menu.classList.toggle("hidden");
-      });
+      };
+
+      hamburgerBtn.addEventListener("click", toggleMenu);
     }
   }
 
