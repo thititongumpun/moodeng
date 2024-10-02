@@ -6,15 +6,17 @@ import { Suspense, lazy } from "preact/compat";
 const Search = lazy(() => import("@/components/preact/Search"));
 const Meme = lazy(() => import("@/components/preact/Meme"));
 const Loading = lazy(() => import("@/components/preact/Loading"));
+const UploadForm = lazy(() => import("@/components/preact/UploadForm"));
+
+export const client = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function PreactApp() {
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-  });
   return (
     <QueryClientProvider client={client}>
       <App />
@@ -29,7 +31,13 @@ const App = () => {
   return (
     <div className="py-8 md:p-1">
       <Suspense fallback={<Loading />}>
-        <Search search={search} setSearch={setSearch} />
+        <div className="mx-auto flex items-center justify-center gap-4">
+          <div className="inline-flex items-center space-x-4">
+            <Search search={search} setSearch={setSearch} />
+            <UploadForm />
+          </div>
+        </div>
+
         <Meme search={search} />
       </Suspense>
     </div>

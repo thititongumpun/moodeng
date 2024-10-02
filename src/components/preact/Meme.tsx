@@ -58,26 +58,6 @@ export default function Meme({ search }: MemeProps) {
           ?.filter((item) => !item.name.startsWith(".empty"))
           .map((item) => {
             return (
-              // <div
-              //   key={item.name}
-              //   className="card card-bordered w-full bg-base-100 shadow-lg transition-shadow duration-200 ease-in-out hover:shadow-xl"
-              // >
-              //   <figure className="overflow-hidden rounded-t-lg">
-              //     <img
-              //       src={item.url}
-              //       alt={item.name}
-              //       width="400"
-              //       height="400"
-              //       className="aspect-square h-auto w-full object-fit"
-              //       loading="lazy"
-              //     />
-              //   </figure>
-              //   <div className="card-body">
-              //     <h2 className="prose-sm md:prose-lg card-title">
-              //       {item.name}
-              //     </h2>
-              //   </div>
-              // </div>
               <ImageCard key={item.name} name={item.name} url={item.url} />
             );
           })}
