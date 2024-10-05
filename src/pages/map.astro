@@ -1,0 +1,126 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="Memes">
+  <div
+    id="map"
+    class="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full mb-4"
+  >
+  </div>
+</Layout>
+
+<script>
+  import L, {
+    type LocationEvent,
+    type ErrorEventHandlerFn,
+    Marker,
+  } from "leaflet";
+
+  const map = L.map("map").fitWorld();
+
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+
+  let userMarker: Marker | null = null;
+  let accuracyCircle: L.Circle | null = null;
+  let lastFetchedLatLng: L.LatLng | null = null;
+
+  let stationMarkers: Marker[] = [];
+
+  // Throttle control
+  let lastFetchTime = 0;
+  const THROTTLE_TIME = 60000;
+
+  const apiKey = import.meta.env.PUBLIC_TOMTOM_API_KEY;
+
+  function getDistance(latlng1: L.LatLng, latlng2: L.LatLng): number {
+    return latlng1.distanceTo(latlng2);
+  }
+
+  async function fetchTomTomLocations(lat: number, lon: number) {
+    const radius = 10000;
+    const url = `https://api.tomtom.com/search/2/nearbySearch/.json?lat=${lat}&lon=${lon}&radius=${radius}&language=th-TH&categorySet=7309&view=Unified&relatedPois=off&key=${apiKey}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      stationMarkers.map((marker) => map.removeLayer(marker));
+      stationMarkers = [];
+
+      data.results.map((result: any) => {
+        const { position, poi } = result;
+        const { lat, lon } = position;
+        const name = poi.name;
+
+        const marker = L.marker([lat, lon])
+          .addTo(map)
+          .bindPopup(`<strong>${name}</strong>`, {
+            autoClose: false,
+            closeOnClick: false,
+          })
+          .openPopup();
+
+        stationMarkers.push(marker);
+      });
+    } catch (error) {
+      console.error("Error fetching TomTom locations:", error);
+    }
+  }
+
+  map.locate({
+    setView: true,
+    maxZoom: 16,
+    watch: true,
+    enableHighAccuracy: true,
+  });
+
+  function onLocationFound(e: LocationEvent) {
+    const radius = e.accuracy;
+    const { lat, lng } = e.latlng;
+    const currentLatLng = e.latlng;
+
+    if (userMarker) {
+      userMarker.setLatLng(currentLatLng);
+    } else {
+      userMarker = L.marker(currentLatLng)
+        .addTo(map)
+        .bindPopup(`You are within ${radius} meters from this point`)
+        .openPopup();
+    }
+
+    if (accuracyCircle) {
+      accuracyCircle.setLatLng(currentLatLng).setRadius(radius);
+    } else {
+      accuracyCircle = L.circle(currentLatLng, { radius }).addTo(map);
+    }
+
+    const now = Date.now();
+    const timeSinceLastFetch = now - lastFetchTime;
+
+    if (timeSinceLastFetch < THROTTLE_TIME) {
+      console.log("Throttled: Too soon to fetch again.");
+      return;
+    }
+
+    if (
+      !lastFetchedLatLng ||
+      getDistance(lastFetchedLatLng, currentLatLng) > 1000
+    ) {
+      fetchTomTomLocations(lat, lng);
+      lastFetchedLatLng = currentLatLng;
+      lastFetchTime = now;
+    }
+  }
+
+  const onLocationError: ErrorEventHandlerFn = function (e) {
+    alert(e.message);
+  };
+
+  map.on("locationfound", onLocationFound);
+  map.on("locationerror", onLocationError);
+</script>
