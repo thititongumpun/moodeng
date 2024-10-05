@@ -11,6 +11,7 @@ import Layout from "@/layouts/Layout.astro";
 </Layout>
 
 <script>
+  import type { TomTomResponse } from "@/types/TomTomResponse";
   import L, {
     type LocationEvent,
     type ErrorEventHandlerFn,
@@ -32,7 +33,6 @@ import Layout from "@/layouts/Layout.astro";
 
   let stationMarkers: Marker[] = [];
 
-  // Throttle control
   let lastFetchTime = 0;
   const THROTTLE_TIME = 60000;
 
@@ -48,20 +48,28 @@ import Layout from "@/layouts/Layout.astro";
 
     try {
       const response = await fetch(url);
-      const data = await response.json();
+      const data: TomTomResponse = await response.json();
+
+      console.log(data);
 
       stationMarkers.map((marker) => map.removeLayer(marker));
       stationMarkers = [];
 
-      data.results.map((result: any) => {
-        const { position, poi } = result;
+      data.results.map((result) => {
+        const { position, poi, dist } = result;
         const { lat, lon } = position;
         const name = poi.name;
 
+        const distance = (dist / 1000).toFixed(2)
+
         const marker = L.marker([lat, lon])
           .addTo(map)
-          .bindPopup(`<strong>${name}</strong>`, {
+          .bindPopup(
+            `<strong>${name}</strong>
+            <p>${distance} กม.<p>
+            `, {
             autoClose: false,
+            autoPan: false,
             closeOnClick: false,
           })
           .openPopup();
@@ -73,10 +81,7 @@ import Layout from "@/layouts/Layout.astro";
     }
   }
 
-  map.locate({
-    watch: true,
-    enableHighAccuracy: true,
-  });
+  map.locate({ watch: true, enableHighAccuracy: true });
 
   function onLocationFound(e: LocationEvent) {
     const radius = e.accuracy;
@@ -84,7 +89,7 @@ import Layout from "@/layouts/Layout.astro";
     const currentLatLng = e.latlng;
 
     if (!initialLocationSet) {
-      map.setView(currentLatLng, 16);
+      map.setView(currentLatLng, 15);
       initialLocationSet = true;
     }
 
@@ -113,7 +118,7 @@ import Layout from "@/layouts/Layout.astro";
 
     if (
       !lastFetchedLatLng ||
-      getDistance(lastFetchedLatLng, currentLatLng) > 1000
+      getDistance(lastFetchedLatLng, currentLatLng) > 500
     ) {
       fetchTomTomLocations(lat, lng);
       lastFetchedLatLng = currentLatLng;

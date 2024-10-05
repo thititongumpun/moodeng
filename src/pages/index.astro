@@ -2,6 +2,11 @@
 import Layout from "@/layouts/Layout.astro";
 import Card from "@/components/Card.astro";
 import Text from "@/components/Text.astro";
+
+import * as test from "../posts/test.md";
+const posts = Object.values(
+  await import.meta.glob("../posts/*.md", { eager: true })
+);
 ---
 
 <Layout title="Wcydtt">
@@ -36,6 +41,19 @@ import Text from "@/components/Text.astro";
     </ul>
     <Text name="??" />
     <button class="btn btn-circle">asd</button>
+    <p>{test.frontmatter.title}</p>
+    <p>Written by: {test.frontmatter.author}</p>
+
+    <!-- <p>Post Archive:</p>
+    <ul>
+      {
+        posts.map((post) => (
+          <li>
+            <a href={post.url}>{post.frontmatter.title}</a>
+          </li>
+        ))
+      }
+    </ul> -->
   </main>
 </Layout>
 

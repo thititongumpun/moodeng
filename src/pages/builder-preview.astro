@@ -1,0 +1,19 @@
+---
+const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
+const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
+---
+
+<html lang="en">
+  <head>
+    <title>Preview for builder.io</title>
+  </head>
+  <body>
+    <header>This is your header</header>
+
+    <builder-component model={builderModel} api-key={builderAPIpublicKey}
+    ></builder-component>
+    <script async src="https://cdn.builder.io/js/webcomponents"></script>
+
+    <footer>This is your footer</footer>
+  </body>
+</html>
