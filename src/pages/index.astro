@@ -19,7 +19,7 @@ const { results: posts }: { results: Post[] } = await fetch(
     apiKey: builderAPIpublicKey,
     fields: ["data.slug", "data.title"].join(","),
     cachebust: "true",
-  }).toString()}`
+  }).toString()}`,
 )
   .then((res) => res.json())
   .catch(() => ({ results: [] }));
@@ -33,7 +33,7 @@ const { results: posts }: { results: Post[] } = await fetch(
       />
       <strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
     </p>
-    <ul role="list" class="grid grid-cols-2 gap-8 m-auto p-0">
+    <ul role="list" class="m-auto grid grid-cols-2 gap-8 p-0">
       <Card
         href="https://docs.astro.build/"
         title="Documentation"

@@ -11,8 +11,8 @@ export async function getStaticPaths() {
         apiKey: builderAPIpublicKey,
         fields: ["data.slug", "data.title"].join(","),
         cachebust: "true",
-      }
-    ).toString()}`
+      },
+    ).toString()}`,
   )
     .then((res) => res.json())
     .catch((e) => console.log(e));
@@ -36,7 +36,7 @@ const { html: postHTML } = await fetch(
     url: encodedUrl,
     "query.data.slug": slug,
     cachebust: "true",
-  }).toString()}`
+  }).toString()}`,
 )
   .then((res) => res.json())
   .catch();

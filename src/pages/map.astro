@@ -3,10 +3,8 @@ import Layout from "@/layouts/Layout.astro";
 ---
 
 <Layout title="Memes">
-  <div
-    id="map"
-    class="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full mb-4"
-  >
+  <div class="relative h-screen w-screen">
+    <div id="map" class="relative h-screen w-full"></div>
   </div>
 </Layout>
 
@@ -50,8 +48,6 @@ import Layout from "@/layouts/Layout.astro";
       const response = await fetch(url);
       const data: TomTomResponse = await response.json();
 
-      console.log(data);
-
       stationMarkers.map((marker) => map.removeLayer(marker));
       stationMarkers = [];
 
@@ -60,18 +56,20 @@ import Layout from "@/layouts/Layout.astro";
         const { lat, lon } = position;
         const name = poi.name;
 
-        const distance = (dist / 1000).toFixed(2)
+        const distance = (dist / 1000).toFixed(2);
 
         const marker = L.marker([lat, lon])
           .addTo(map)
           .bindPopup(
             `<strong>${name}</strong>
             <p>${distance} กม.<p>
-            `, {
-            autoClose: false,
-            autoPan: false,
-            closeOnClick: false,
-          })
+            `,
+            {
+              autoClose: false,
+              autoPan: false,
+              closeOnClick: false,
+            },
+          )
           .openPopup();
 
         stationMarkers.push(marker);

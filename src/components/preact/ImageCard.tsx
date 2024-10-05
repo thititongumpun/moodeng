@@ -19,7 +19,7 @@ export default function ImageCard({ url, name }: ImageCardProps) {
         />
       </figure>
       <div className="card-body">
-        <h2 className="prose-sm md:prose-lg card-title">{name}</h2>
+        <h2 className="card-title prose-sm md:prose-lg">{name}</h2>
       </div>
     </div>
   );
