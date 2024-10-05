@@ -11,7 +11,11 @@ import Layout from "@/layouts/Layout.astro";
 </Layout>
 
 <script>
-  import L, { type LocationEvent, type ErrorEventHandlerFn } from "leaflet";
+  import L, {
+    type LocationEvent,
+    type ErrorEventHandlerFn,
+    Marker,
+  } from "leaflet";
 
   const map = L.map("map").fitWorld();
 
@@ -21,17 +25,33 @@ import Layout from "@/layouts/Layout.astro";
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(map);
 
-  map.locate({ setView: true, maxZoom: 16 });
+  let marker: Marker | null = null;
+  map.locate({
+    setView: true,
+    maxZoom: 16,
+    watch: true,
+    enableHighAccuracy: true,
+  });
+
+  let accuracyCircle: L.Circle | null = null;
 
   function onLocationFound(e: LocationEvent) {
     const radius = e.accuracy;
 
-    L.marker(e.latlng)
-      .addTo(map)
-      .bindPopup(`You are within ${radius} meters from this point`)
-      .openPopup();
+    if (marker) {
+      marker.setLatLng(e.latlng);
+    } else {
+      marker = L.marker(e.latlng)
+        .addTo(map)
+        .bindPopup(`You are within ${radius} meters from this point`)
+        .openPopup();
+    }
 
-    L.circle(e.latlng, { radius }).addTo(map);
+    if (accuracyCircle) {
+      accuracyCircle.setLatLng(e.latlng).setRadius(radius);
+    } else {
+      accuracyCircle = L.circle(e.latlng, { radius }).addTo(map);
+    }
   }
 
   const onLocationError: ErrorEventHandlerFn = function (e) {
