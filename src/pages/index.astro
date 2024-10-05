@@ -1,12 +1,28 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Card from "@/components/Card.astro";
-import Text from "@/components/Text.astro";
 
-import * as test from "../posts/test.md";
-const posts = Object.values(
-  await import.meta.glob("../posts/*.md", { eager: true })
-);
+interface PostData {
+  slug: string;
+  title: string;
+}
+
+export interface Post {
+  data: PostData;
+}
+
+const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
+const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
+
+const { results: posts }: { results: Post[] } = await fetch(
+  `https://cdn.builder.io/api/v3/content/${builderModel}?${new URLSearchParams({
+    apiKey: builderAPIpublicKey,
+    fields: ["data.slug", "data.title"].join(","),
+    cachebust: "true",
+  }).toString()}`
+)
+  .then((res) => res.json())
+  .catch(() => ({ results: [] }));
 ---
 
 <Layout title="Wcydtt">
@@ -38,22 +54,16 @@ const posts = Object.values(
         title="Community"
         body="Come say hi to our amazing Discord community. ❤️"
       />
-    </ul>
-    <Text name="??" />
-    <button class="btn btn-circle">asd</button>
-    <p>{test.frontmatter.title}</p>
-    <p>Written by: {test.frontmatter.author}</p>
-
-    <!-- <p>Post Archive:</p>
-    <ul>
       {
-        posts.map((post) => (
-          <li>
-            <a href={post.url}>{post.frontmatter.title}</a>
-          </li>
+        posts.flatMap(({ data: { slug, title } }) => (
+          <Card
+            href={`/posts/${slug}`}
+            title={title}
+            body="Come say hi to our amazing Discord community. ❤️"
+          />
         ))
       }
-    </ul> -->
+    </ul>
   </main>
 </Layout>
 

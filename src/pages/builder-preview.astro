@@ -12,7 +12,8 @@ const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
 
     <builder-component model={builderModel} api-key={builderAPIpublicKey}
     ></builder-component>
-    <script async src="https://cdn.builder.io/js/webcomponents"></script>
+    <script is:inline async src="https://cdn.builder.io/js/webcomponents"
+    ></script>
 
     <footer>This is your footer</footer>
   </body>
