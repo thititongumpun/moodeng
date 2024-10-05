@@ -2,8 +2,43 @@
 import Layout from "@/layouts/Layout.astro";
 ---
 
+<link rel="stylesheet" href="../../node_modules/leaflet/dist/leaflet.css" />
 <Layout title="Memes">
-  <div class="mockup-code">
-    <pre data-prefix="$"><code>npm i daisyui</code></pre>
+  <div
+    id="map"
+    class="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full mb-4"
+  >
   </div>
 </Layout>
+
+<script>
+  import L, { type LocationEvent, type ErrorEventHandlerFn } from "leaflet";
+
+  const map = L.map("map").fitWorld();
+
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+
+  map.locate({ setView: true, maxZoom: 16 });
+
+  function onLocationFound(e: LocationEvent) {
+    const radius = e.accuracy;
+
+    L.marker(e.latlng)
+      .addTo(map)
+      .bindPopup(`You are within ${radius} meters from this point`)
+      .openPopup();
+
+    L.circle(e.latlng, { radius }).addTo(map);
+  }
+
+  const onLocationError: ErrorEventHandlerFn = function (e) {
+    alert(e.message);
+  };
+
+  map.on("locationfound", onLocationFound);
+  map.on("locationerror", onLocationError);
+</script>

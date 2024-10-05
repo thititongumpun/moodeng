@@ -18,6 +18,7 @@
     "@tanstack/react-query": "^5.59.0",
     "@tanstack/react-query-devtools": "^5.59.0",
     "astro": "^4.15.10",
+    "leaflet": "^1.9.4",
     "nanostores": "^0.11.3",
     "preact": "^10.24.1",
     "preact-compat": "^3.19.0",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
+    "@types/leaflet": "^1.9.12",
     "@vite-pwa/astro": "^0.4.3",
     "daisyui": "^4.12.10",
     "prettier": "^3.3.3",
