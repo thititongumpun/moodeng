@@ -15,6 +15,7 @@ import Layout from "@/layouts/Layout.astro";
     type ErrorEventHandlerFn,
     Marker,
   } from "leaflet";
+  import "leaflet-routing-machine";
 
   const map = L.map("map").fitWorld();
 
@@ -30,8 +31,8 @@ import Layout from "@/layouts/Layout.astro";
   let initialLocationSet = false;
 
   let stationMarkers: Marker[] = [];
-
   let lastFetchTime = 0;
+  let currentRoute: any = null;
   const THROTTLE_TIME = 60000;
 
   const apiKey = import.meta.env.PUBLIC_TOMTOM_API_KEY;
@@ -48,10 +49,10 @@ import Layout from "@/layouts/Layout.astro";
       const response = await fetch(url);
       const data: TomTomResponse = await response.json();
 
-      stationMarkers.map((marker) => map.removeLayer(marker));
+      stationMarkers.forEach((marker) => map.removeLayer(marker));
       stationMarkers = [];
 
-      data.results.map((result) => {
+      data.results.forEach((result) => {
         const { position, poi, dist } = result;
         const { lat, lon } = position;
         const name = poi.name;
@@ -62,8 +63,7 @@ import Layout from "@/layouts/Layout.astro";
           .addTo(map)
           .bindPopup(
             `<strong>${name}</strong>
-            <p>${distance} กม.<p>
-            `,
+            <p>${distance} กม.<p>`,
             {
               autoClose: false,
               autoPan: false,
@@ -72,10 +72,49 @@ import Layout from "@/layouts/Layout.astro";
           )
           .openPopup();
 
+        marker.on("click", function () {
+          toggleRouteToStation({ lat, lon }, marker);
+        });
+
         stationMarkers.push(marker);
       });
     } catch (error) {
       console.error("Error fetching TomTom locations:", error);
+    }
+  }
+
+  function toggleRouteToStation(
+    stationLocation: { lat: number; lon: number },
+    marker: Marker,
+  ) {
+    if (currentRoute) {
+      map.removeControl(currentRoute);
+      currentRoute = null;
+
+      marker.openPopup();
+    } else if (userMarker) {
+      if (import.meta.env.MODE === "production") {
+        currentRoute = L.Routing.control({
+          waypoints: [
+            L.latLng(userMarker.getLatLng()),
+            L.latLng(stationLocation.lat, stationLocation.lon),
+          ],
+          routeWhileDragging: false,
+
+          router: L.Routing.mapbox(import.meta.env.PUBLIC_MAPBOX_APIKEY, {
+            profile: "mapbox/driving",
+            language: "en",
+          }),
+        }).addTo(map);
+      } else {
+        currentRoute = L.Routing.control({
+          waypoints: [
+            L.latLng(userMarker.getLatLng()),
+            L.latLng(stationLocation.lat, stationLocation.lon),
+          ],
+          routeWhileDragging: false,
+        }).addTo(map);
+      }
     }
   }
 
