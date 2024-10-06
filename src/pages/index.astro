@@ -5,6 +5,7 @@ import Card from "@/components/Card.astro";
 interface PostData {
   slug: string;
   title: string;
+  description: string;
 }
 
 export interface Post {
@@ -30,12 +31,8 @@ const { results: posts }: { results: Post[] } = await fetch(
     <h1>Welcome to <span class="text-gradient">Wcydtt</span></h1>
     <ul role="list" class="m-auto grid grid-cols-2 gap-8 p-0">
       {
-        posts.flatMap(({ data: { slug, title } }) => (
-          <Card
-            href={`/posts/${slug}`}
-            title={title}
-            body="Come say hi to our amazing Discord community. ❤️"
-          />
+        posts.flatMap(({ data: { slug, title, description } }) => (
+          <Card href={`/posts/${slug}`} title={title} body={description} />
         ))
       }
     </ul>
