@@ -169,4 +169,13 @@ import Layout from "@/layouts/Layout.astro";
 
   map.on("locationfound", onLocationFound);
   map.on("locationerror", onLocationError);
+
+  function setViewportHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }
+
+  setViewportHeight();
+
+  window.addEventListener("resize", setViewportHeight);
 </script>

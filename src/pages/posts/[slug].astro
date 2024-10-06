@@ -18,7 +18,7 @@ export async function getStaticPaths() {
     .then((res) => res.json())
     .catch((e) => console.log(e));
   return [
-    ...posts.flatMap(({ data: { slug, title } }) => [
+    ...posts.flatMap(({ data: { slug, title, description } }) => [
       {
         params: { slug },
         props: { title },
@@ -46,8 +46,7 @@ const { html: postHTML } = await fetch(
 <Layout title=`Wcydtt | ${title}`>
   <div class="flex justify-center px-4 sm:px-6 lg:px-8">
     <div class="lg:prose-md prose prose-sm max-w-full py-6 sm:prose-base">
-      <div class="flex flex-wrap justify-center gap-3">
-      </div>
+      <div class="flex flex-wrap justify-center gap-3"></div>
 
       <div class="mt-6">
         <Fragment set:html={postHTML} />

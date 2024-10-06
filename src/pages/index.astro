@@ -18,7 +18,7 @@ const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
 const { results: posts }: { results: Post[] } = await fetch(
   `https://cdn.builder.io/api/v3/content/${builderModel}?${new URLSearchParams({
     apiKey: builderAPIpublicKey,
-    fields: ["data.slug", "data.title"].join(","),
+    fields: ["data.slug", "data.title", "data.description"].join(","),
     cachebust: "true",
   }).toString()}`,
 )
@@ -29,7 +29,7 @@ const { results: posts }: { results: Post[] } = await fetch(
 <Layout title="Wcydtt">
   <main>
     <h1>Welcome to <span class="text-gradient">Wcydtt</span></h1>
-    <ul role="list" class="m-auto grid grid-cols-2 gap-8 p-0">
+    <ul role="list" class="m-auto grid grid-cols-1 gap-8 p-0 md:grid-cols-2">
       {
         posts.flatMap(({ data: { slug, title, description } }) => (
           <Card href={`/posts/${slug}`} title={title} body={description} />
