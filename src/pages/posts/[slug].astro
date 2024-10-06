@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import type { Post } from "../index.astro";
+import BackIcon from "@/components/BackIcon.astro";
 
 export async function getStaticPaths() {
   const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
@@ -43,7 +44,7 @@ const { html: postHTML } = await fetch(
 ---
 
 <Layout title=`Wcydtt | ${title}`>
-  <html lang="en">
+  <!-- <html lang="en">
     <head>
       <title>{title}</title>
     </head>
@@ -55,5 +56,14 @@ const { html: postHTML } = await fetch(
       </article>
       <footer>This is your footer</footer>
     </body>
-  </html>
+  </html> -->
+  <div class="flex justify-center">
+    <div class="lg:prose-md prose py-6">
+      <div class="flex gap-3"></div>
+      <div>
+        <Fragment set:html={postHTML} />
+        <BackIcon />
+      </div>
+    </div>
+  </div>
 </Layout>
