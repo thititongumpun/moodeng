@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import type { Post } from "../index.astro";
 import BackIcon from "@/components/BackIcon.astro";
+import { AstroSeo } from "@astrolib/seo";
 
 export async function getStaticPaths() {
   const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
@@ -31,7 +32,7 @@ const { title } = Astro.props;
 const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
 const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
 const encodedUrl = encodeURIComponent("moot");
-const { html: postHTML } = await fetch(
+const { html: postHTML, data: postData } = await fetch(
   `https://cdn.builder.io/api/v1/qwik/${builderModel}?${new URLSearchParams({
     apiKey: builderAPIpublicKey,
     url: encodedUrl,
@@ -41,7 +42,39 @@ const { html: postHTML } = await fetch(
 )
   .then((res) => res.json())
   .catch();
+
+const seoDescription =
+  postData?.description || "Read more on Wcydtt blog about exciting topics!";
+const seoImage =
+  postData?.image || "https://www.wcydtt.co/images/default-og-image.jpg";
+const seoTitle = `${title} | Wcydtt`;
 ---
+
+<AstroSeo
+  title={seoTitle}
+  description={seoDescription}
+  canonical={`https://www.wcydtt.co/blog/${slug}`}
+  openGraph={{
+    url: `https://www.wcydtt.co/blog/${slug}`,
+    title: seoTitle,
+    description: seoDescription,
+    images: [
+      {
+        url: seoImage,
+        width: 1200,
+        height: 630,
+        alt: `Image for ${title}`,
+        type: "image/jpeg",
+      },
+    ],
+    site_name: "Wcydtt",
+  }}
+  twitter={{
+    handle: "@wcydtt",
+    site: "@wcydtt",
+    cardType: "summary_large_image",
+  }}
+/>
 
 <Layout title=`Wcydtt | ${title}`>
   <div class="flex justify-center px-4 sm:px-6 lg:px-8">

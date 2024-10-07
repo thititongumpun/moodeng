@@ -1,5 +1,6 @@
 ---
 import { pwaInfo } from "virtual:pwa-info";
+import { AstroSeo } from "@astrolib/seo";
 import Navbar from "@/components/Navbar.astro";
 import BottomNav from "@/components/BottomNav.astro";
 
@@ -25,6 +26,33 @@ const { title } = Astro.props;
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="generator" content={Astro.generator} />
+    <AstroSeo
+      title={title}
+      description="Wcydtt - A blog and resource hub focused on software development, EV charging stations, and utilities."
+      canonical="https://www.wcydtt.co/"
+      openGraph={{
+        url: "https://www.wcydtt.co",
+        title: `${title} - Wcydtt`,
+        description:
+          "Explore content on software development, electric vehicle charging stations, utilities, and more.",
+        images: [
+          {
+            url: "https://www.wcydtt.co/wcydtt.png",
+            width: 1200,
+            height: 630,
+            alt: "Wcydtt",
+            type: "image/png",
+          },
+        ],
+        site_name: "Wcydtt",
+      }}
+      twitter={{
+        handle: "@wcydtt",
+        site: "@wcydtt",
+        cardType: "summary_large_image",
+      }}
+    />
+
     <title>{title}</title>
     <meta name="description" content={title} />
     <script src="/src/pwa.ts"></script>

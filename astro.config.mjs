@@ -11,6 +11,8 @@ import AstroPWA from "@vite-pwa/astro";
 
 import sitemap from "@astrojs/sitemap";
 
+import playformCompress from "@playform/compress";
+
 // https://astro.build/config
 export default defineConfig({
   output: "hybrid",
@@ -70,6 +72,7 @@ export default defineConfig({
         directoryAndTrailingSlashHandler: true,
       },
     }),
+    playformCompress(),
   ],
   server: { port: 5173 },
 
