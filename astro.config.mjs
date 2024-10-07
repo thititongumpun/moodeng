@@ -18,11 +18,7 @@ export default defineConfig({
   integrations: [
     tailwind(),
     preact(),
-    sitemap({
-      changefreq: "weekly",
-      priority: 0.7,
-      lastmod: new Date(),
-    }),
+    sitemap(),
     AstroPWA({
       mode: "production",
       base: "/",
