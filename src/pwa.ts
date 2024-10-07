@@ -6,6 +6,8 @@ const updateSW = registerSW({
     console.log('Service Worker registered:', swScriptUrl);
   },
   onNeedRefresh() {
+    console.log('New content detected, updating the app...');
+
     updateSW();
 
     const notification = document.createElement('div');
@@ -14,10 +16,14 @@ const updateSW = registerSW({
         The app has been updated with new content.
       </div>
     `;
+
     document.body.appendChild(notification);
+
+    console.log('Notification banner added to the DOM.');
 
     setTimeout(() => {
       document.body.removeChild(notification);
+      console.log('Notification banner removed from the DOM.');
     }, 5000);
   },
   onOfflineReady() {

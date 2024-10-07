@@ -16,7 +16,11 @@ export default defineConfig({
   output: "hybrid",
   site: "https://www.wcydtt.co",
   integrations: [
-    sitemap(),
+    sitemap({
+      changefreq: "weekly",
+      priority: 0.7,
+      lastmod: new Date(),
+    }),
     tailwind(),
     preact(),
     AstroPWA({
