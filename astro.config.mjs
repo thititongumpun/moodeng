@@ -88,8 +88,6 @@ export default defineConfig({
 
   adapter: vercel({
     webAnalytics: { enabled: true },
-    isr: {
-      expiration: 10
-    }
+    isr: true
   }),
 });
