@@ -13,8 +13,8 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://www.wcydtt.co",
   output: "hybrid",
+  site: "https://www.wcydtt.co",
   integrations: [
     sitemap(),
     tailwind(),
@@ -56,7 +56,7 @@ export default defineConfig({
       },
       workbox: {
         navigateFallback: "/",
-        globPatterns: ["**/*.{css,js,html,svg,png,ico,txt}"],
+        globPatterns: ["**/*.{css,js,html,svg,png,ico,txt,xml}"],
       },
       devOptions: {
         enabled: false,
