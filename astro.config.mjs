@@ -13,12 +13,12 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "hybrid",
   site: "https://www.wcydtt.co",
+  output: "hybrid",
   integrations: [
+    sitemap(),
     tailwind(),
     preact(),
-    sitemap(),
     AstroPWA({
       mode: "production",
       base: "/",
