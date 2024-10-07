@@ -18,7 +18,7 @@ export async function getStaticPaths() {
     .then((res) => res.json())
     .catch((e) => console.log(e));
   return [
-    ...posts.flatMap(({ data: { slug, title, description } }) => [
+    ...posts.flatMap(({ data: { slug, title } }) => [
       {
         params: { slug },
         props: { title },

@@ -9,12 +9,20 @@ import vercel from "@astrojs/vercel/serverless";
 
 import AstroPWA from "@vite-pwa/astro";
 
+import sitemap from "@astrojs/sitemap";
+
 // https://astro.build/config
 export default defineConfig({
   output: "hybrid",
+  site: "https://www.wcydtt.co",
   integrations: [
     tailwind(),
     preact(),
+    sitemap({
+      changefreq: "weekly",
+      priority: 0.7,
+      lastmod: new Date(),
+    }),
     AstroPWA({
       mode: "production",
       base: "/",
@@ -77,8 +85,6 @@ export default defineConfig({
 
   adapter: vercel({
     webAnalytics: { enabled: true },
-    isr: {
-      expiration: 60 * 60 * 24,
-    },
+    isr: true,
   }),
 });
