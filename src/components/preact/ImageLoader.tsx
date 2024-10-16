@@ -1,8 +1,9 @@
 export default function ImageLoader() {
+  const arrays = Array.from({ length: 10 });
   return (
     <section className="p-1">
       <div className="grid grid-cols-2 gap-8 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-        {Array.from({ length: 12 }).map((_, i) => {
+        {Array.from({ length: 18 }).map((_, i) => {
           return (
             <div
               key={i}

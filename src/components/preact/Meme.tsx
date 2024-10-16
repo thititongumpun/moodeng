@@ -5,6 +5,7 @@ import { getAllMeme } from "@/lib/queryFn";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import Pagination from "./Pagination";
 import ImageCard from "./ImageCard";
+import GalleryModal from "./GalleryModal";
 
 type MemeProps = {
   search?: string;
@@ -12,7 +13,7 @@ type MemeProps = {
 
 export default function Meme({ search }: MemeProps) {
   const [page, setPage] = useState(0);
-  const limit = 12;
+  const limit = 10;
 
   useEffect(() => {
     setPage(0);
@@ -53,7 +54,7 @@ export default function Meme({ search }: MemeProps) {
 
   return (
     <section className="p-2">
-      <div className="grid grid-cols-2 gap-8 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+      {/* <div className="grid grid-cols-2 gap-8 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {data
           ?.filter((item) => !item.name.startsWith(".empty"))
           .map((item) => {
@@ -61,8 +62,8 @@ export default function Meme({ search }: MemeProps) {
               <ImageCard key={item.name} name={item.name} url={item.url} />
             );
           })}
-      </div>
-
+      </div> */}
+      <GalleryModal data={data}/>
       <div className="mt-10 flex justify-center pb-4">
         <Pagination
           page={page}
