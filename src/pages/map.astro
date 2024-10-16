@@ -3,13 +3,13 @@ import Layout from "@/layouts/Layout.astro";
 ---
 
 <Layout title="Memes">
-    <div class="relative h-[calc(100vh-56px)] w-screen">
-      <div id="map" class="relative h-full w-full"></div>
-    </div>
+  <div class="relative h-[calc(100vh-56px)] w-screen">
+    <div id="map" class="relative h-full w-full"></div>
+  </div>
 </Layout>
 
 <script>
-  import type { TomTomResponse } from "@/types/TomTomResponse";
+  import type { ConnectorType, TomTomResponse } from "@/types/TomTomResponse";
   import L, {
     type LocationEvent,
     type ErrorEventHandlerFn,
@@ -49,21 +49,43 @@ import Layout from "@/layouts/Layout.astro";
       const response = await fetch(url);
       const data: TomTomResponse = await response.json();
 
-      stationMarkers.forEach((marker) => map.removeLayer(marker));
+      stationMarkers.map((marker) => map.removeLayer(marker));
       stationMarkers = [];
 
-      data.results.forEach((result) => {
-        const { position, poi, dist } = result;
+      data.results.map((result) => {
+        const { position, poi, dist, chargingPark } = result;
         const { lat, lon } = position;
         const name = poi.name;
-
         const distance = (dist / 1000).toFixed(2);
+        const chargingConnector = chargingPark.connectors
+          .map((connector) => {
+            return {
+              power: connector.ratedPowerKW,
+              connectorType: connector.currentType,
+            };
+          })
+          .sort((a, b) => b.power - a.power);
+
+        const renderTable = chargingConnector.map((connector) => {
+          return `<table>
+              <tr>
+                <th>ประเภท</th>
+                <th>กำลังไฟ</th>
+              </tr>
+              <tr>
+                <td>${connector.connectorType}</td>
+                <td>${connector.power} KW.</td>
+              </tr>
+            </table>`;
+        });
 
         const marker = L.marker([lat, lon])
           .addTo(map)
           .bindPopup(
             `<strong>${name}</strong>
-            <p>${distance} กม.<p>`,
+            <p>${distance} กม.<p>
+            <p>${chargingConnector.length} หัวชาร์จ<p>
+            <p>${renderTable}</p>`,
             {
               autoClose: false,
               autoPan: false,
